@@ -298,6 +298,43 @@
         .btn-outline-primary:hover, .btn-outline-success:hover, .btn-outline-danger:hover {
             transform: translateY(-2px);
         }
+
+        /* Add to existing styles */
+        footer {
+            margin-top: 5rem;
+            box-shadow: 0 -4px 8px rgba(0,0,0,0.1);
+        }
+
+        footer a:hover {
+            color: #fff !important;
+        }
+
+        .tutorial-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .stats-badge {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 0.25rem;
+            display: inline-block;
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
@@ -481,6 +518,42 @@
             </div>
         </div>
 
+        <!-- Add after Materials Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h3 class="h5 mb-0">How to Use</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center mb-4">
+                                    <i class="fas fa-upload fa-3x text-primary mb-3"></i>
+                                    <h5>1. Upload Image</h5>
+                                    <p class="text-muted">Select any JPEG or PNG image as your cover medium.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center mb-4">
+                                    <i class="fas fa-pen fa-3x text-success mb-3"></i>
+                                    <h5>2. Enter Message</h5>
+                                    <p class="text-muted">Type your secret message and choose encoding method.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center mb-4">
+                                    <i class="fas fa-download fa-3x text-danger mb-3"></i>
+                                    <h5>3. Download Result</h5>
+                                    <p class="text-muted">Get your stego image with hidden message.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Modals -->
         <div class="modal fade" id="theoryModal" tabindex="-1">
             <div class="modal-dialog modal-lg">
@@ -655,6 +728,32 @@
             </div>
         </div>
     </div>
+
+    <footer class="bg-dark text-light mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-shield-alt me-2"></i>GreenChiper</h5>
+                    <p class="text-muted">Secure steganography solution for your data hiding needs.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-muted text-decoration-none" data-bs-toggle="modal" data-bs-target="#theoryModal">Steganography Theory</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none" data-bs-toggle="modal" data-bs-target="#lsbModal">LSB Method</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none" data-bs-toggle="modal" data-bs-target="#ganModal">GAN Method</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Statistics</h5>
+                    <ul class="list-unstyled">
+                        <li class="text-muted"><i class="fas fa-image me-2"></i>Images Processed: {{ $stats->images_count ?? 0 }}</li>
+                        <li class="text-muted"><i class="fas fa-clock me-2"></i>Last Activity: {{ $stats->last_activity ?? 'No activity' }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -860,6 +959,26 @@
                 }, 1000);
             }
         });
+
+        // Add to your existing script section
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        window.onscroll = function() {
+            const scrollBtn = document.querySelector('.scroll-to-top');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                scrollBtn.style.display = 'block';
+            } else {
+                scrollBtn.style.display = 'none';
+            }
+        };
     </script>
+    <button class="btn btn-primary rounded-circle scroll-to-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 </body>
 </html>
