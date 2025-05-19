@@ -7,7 +7,7 @@ GreenChiper is a web application that allows users to hide secret messages withi
 - **Multiple Steganography Methods:**
   - LSB (Least Significant Bit)
   - GAN (Generative Adversarial Network)
-  - Autoencoder
+  
 
 - **Key Functionalities:**
   - Message encoding in images
