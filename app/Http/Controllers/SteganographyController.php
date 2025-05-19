@@ -29,7 +29,22 @@ class SteganographyController extends Controller
     {
         try {
             $validated = $request->validate([
-                'image' => 'required|image|max:10240',
+                'image' => [
+                    'required',
+                    'image',
+                    'max:10240',
+                    'mimes:jpeg,png,jpg',
+                    'mimetypes:image/jpeg,image/png',
+                    function ($attribute, $value, $fail) {
+                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                        $mimeType = finfo_file($finfo, $value->getPathname());
+                        finfo_close($finfo);
+                        
+                        if (!in_array($mimeType, ['image/jpeg', 'image/png'])) {
+                            $fail('The file must be a valid image.');
+                        }
+                    }
+                ],
                 'message' => 'required|string|max:1000',
                 'method' => 'required|in:lsb,gan,autoencoder'
             ]);
@@ -59,7 +74,22 @@ class SteganographyController extends Controller
     {
         try {
             $validated = $request->validate([
-                'image' => 'required|image|max:10240',
+                'image' => [
+                    'required',
+                    'image',
+                    'max:10240',
+                    'mimes:jpeg,png,jpg',
+                    'mimetypes:image/jpeg,image/png',
+                    function ($attribute, $value, $fail) {
+                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                        $mimeType = finfo_file($finfo, $value->getPathname());
+                        finfo_close($finfo);
+                        
+                        if (!in_array($mimeType, ['image/jpeg', 'image/png'])) {
+                            $fail('The file must be a valid image.');
+                        }
+                    }
+                ],
                 'method' => 'required|in:lsb,gan,autoencoder'
             ]);
 

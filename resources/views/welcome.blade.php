@@ -249,6 +249,55 @@
             margin: 0 0.25rem;
             border-radius: 20px;
         }
+
+        /* Add to existing styles */
+        .learning-card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .learning-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .modal-header {
+            border-radius: 10px 10px 0 0;
+        }
+
+        .content-section {
+            padding: 1rem;
+        }
+
+        .content-section h6 {
+            color: #2193b0;
+            font-weight: 600;
+        }
+
+        .content-section ul li {
+            padding: 0.5rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .btn-outline-primary, .btn-outline-success, .btn-outline-danger {
+            border-width: 2px;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .btn-outline-primary:hover, .btn-outline-success:hover, .btn-outline-danger:hover {
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -290,7 +339,7 @@
                                 <label class="form-label">Steganography Method:</label>
                                 <select name="method" class="form-control" required>
                                     <option value="gan">GAN (Best Quality)</option>
-                                    <option value="autoencoder">Autoencoder (Fast)</option>
+                                    
                                     <option value="lsb">LSB (Basic)</option>
                                 </select>
                                 <div class="method-info text-muted"></div>
@@ -337,7 +386,7 @@
                                 <label class="form-label">Steganography Method:</label>
                                 <select name="method" class="form-control" required>
                                     <option value="gan">GAN</option>
-                                    <option value="autoencoder">Autoencoder</option>
+                                   
                                     <option value="lsb">LSB</option>
                                 </select>
                                 <div class="method-info text-muted"></div>
@@ -364,6 +413,204 @@
                         <div id="decodedMessage" class="mt-3 d-none">
                             <h6>Decoded Message:</h6>
                             <pre class="bg-light p-2 rounded"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Materials Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="h5 mb-0">Learning Materials</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Steganography Theory -->
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 learning-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-book-open text-primary me-2"></i>
+                                            Steganography Theory
+                                        </h5>
+                                        <p class="card-text">Learn about the fundamentals of steganography and its importance in information security.</p>
+                                        <a href="#" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#theoryModal">
+                                            <i class="fas fa-arrow-right me-1"></i> Read More
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- LSB Method -->
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 learning-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-microchip text-success me-2"></i>
+                                            LSB Method
+                                        </h5>
+                                        <p class="card-text">Understanding the Least Significant Bit method and its implementation.</p>
+                                        <a href="#" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#lsbModal">
+                                            <i class="fas fa-arrow-right me-1"></i> Learn More
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- GAN Method -->
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 learning-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-brain text-danger me-2"></i>
+                                            GAN Method
+                                        </h5>
+                                        <p class="card-text">Exploring Generative Adversarial Networks in steganography applications.</p>
+                                        <a href="#" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#ganModal">
+                                            <i class="fas fa-arrow-right me-1"></i> Discover
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modals -->
+        <div class="modal fade" id="theoryModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">Steganography Theory</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="content-section">
+                            <h6 class="mb-3">What is Steganography?</h6>
+                            <p>Steganography is the practice of concealing information within other non-secret data or carriers, such as images, without revealing its existence.</p>
+                            
+                            <h6 class="mb-3 mt-4">Key Concepts:</h6>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Cover Medium: The carrier of the hidden message</li>
+                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Payload: The message to be hidden</li>
+                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Stego Object: The result after embedding</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LSB Modal -->
+        <div class="modal fade" id="lsbModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title">LSB (Least Significant Bit) Method</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="content-section">
+                            <h6 class="mb-3">What is LSB Steganography?</h6>
+                            <p>LSB (Least Significant Bit) steganography is a technique of hiding information by modifying the least significant bit of each pixel in an image.</p>
+
+                            <h6 class="mb-3 mt-4">How It Works:</h6>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Pixel Modification:</strong> Changes the last bit of each color channel (R,G,B)
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Binary Conversion:</strong> Converts message to binary before embedding
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong>Minimal Impact:</strong> Changes are nearly imperceptible to human eye
+                                </li>
+                            </ul>
+
+                            <h6 class="mb-3 mt-4">Advantages:</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-plus-circle text-success me-2"></i>Simple implementation</li>
+                                        <li class="mb-2"><i class="fas fa-plus-circle text-success me-2"></i>Fast processing</li>
+                                        <li class="mb-2"><i class="fas fa-plus-circle text-success me-2"></i>Low computational cost</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-minus-circle text-danger me-2"></i>Limited capacity</li>
+                                        <li class="mb-2"><i class="fas fa-minus-circle text-danger me-2"></i>Less secure than modern methods</li>
+                                        <li class="mb-2"><i class="fas fa-minus-circle text-danger me-2"></i>Vulnerable to statistical analysis</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAN Modal -->
+        <div class="modal fade" id="ganModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">GAN (Generative Adversarial Network) Method</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="content-section">
+                            <h6 class="mb-3">What is GAN Steganography?</h6>
+                            <p>GAN-based steganography uses deep learning to hide information in images while maintaining high visual quality and security.</p>
+
+                            <h6 class="mb-3 mt-4">Components:</h6>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-robot text-primary me-2"></i>
+                                    <strong>Generator:</strong> Creates stego images from cover images and messages
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-search text-warning me-2"></i>
+                                    <strong>Discriminator:</strong> Tries to detect hidden messages
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-brain text-danger me-2"></i>
+                                    <strong>Neural Networks:</strong> Learn optimal hiding patterns
+                                </li>
+                            </ul>
+
+                            <h6 class="mb-3 mt-4">Key Features:</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-success">Advantages:</h6>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-plus-circle text-success me-2"></i>High visual quality</li>
+                                        <li class="mb-2"><i class="fas fa-plus-circle text-success me-2"></i>Better security</li>
+                                        <li class="mb-2"><i class="fas fa-plus-circle text-success me-2"></i>Resistant to steganalysis</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-danger">Limitations:</h6>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-minus-circle text-danger me-2"></i>Computationally intensive</li>
+                                        <li class="mb-2"><i class="fas fa-minus-circle text-danger me-2"></i>Requires GPU for efficiency</li>
+                                        <li class="mb-2"><i class="fas fa-minus-circle text-danger me-2"></i>Complex implementation</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info mt-4">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Note:</strong> GAN steganography represents the state-of-the-art in image steganography, offering superior security and quality compared to traditional methods.
+                            </div>
                         </div>
                     </div>
                 </div>

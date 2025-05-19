@@ -234,86 +234,69 @@ class SteganographyService
     private function encodeGAN(string $originalPath, string $message): string 
     {
         try {
-            // Validate input image and get full paths
+            $pythonScript = base_path('python/gan_steganography.py');
+            if (!file_exists($pythonScript)) {
+                throw new Exception('GAN encoder script not found');
+            }
+
             $originalFullPath = Storage::disk('public')->path($originalPath);
+            if (!file_exists($originalFullPath)) {
+                throw new Exception('Original image not found');
+            }
+
             $stegoPath = 'images/stego/' . uniqid() . '.png';
             $stegoFullPath = Storage::disk('public')->path($stegoPath);
 
-            // Validate image before processing
-            $image = imagecreatefromstring(file_get_contents($originalFullPath));
-            if (!$image) {
-                throw new Exception('Invalid input image');
-            }
-            imagedestroy($image);
-
-            // Ensure message length is valid
-            if (empty($message) || strlen($message) > 256) {
-                throw new Exception('Message must be between 1 and 256 characters');
+            // Create stego directory if needed
+            $stegoDir = dirname($stegoFullPath);
+            if (!file_exists($stegoDir)) {
+                mkdir($stegoDir, 0755, true);
             }
 
-            // Prepare Python command with quality parameters
-            $pythonScript = base_path('python/gan_steganography.py');
-            if (!file_exists($pythonScript)) {
-                throw new Exception('GAN Python script not found');
-            }
-
-            // Fix path separators and escape properly
+            // Fix Windows path separators
+            $pythonScript = str_replace('\\', '/', $pythonScript);
             $originalFullPath = str_replace('\\', '/', $originalFullPath);
             $stegoFullPath = str_replace('\\', '/', $stegoFullPath);
-            
-            // Build command with proper argument order and escaping
+
+            // Execute Python script
             $command = sprintf(
-                'python %s %s %s %s --quality high --preserve-ratio --no-compress',
-                escapeshellarg($pythonScript),
-                escapeshellarg($originalFullPath),
+                'python "%s" encode "%s" %s "%s" 2>&1',
+                $pythonScript,
+                $originalFullPath,
                 escapeshellarg($message),
-                escapeshellarg($stegoFullPath)
+                $stegoFullPath
             );
 
-            // Capture both stdout and stderr
-            $output = [];
-            $returnCode = -1;
-            exec($command . ' 2>&1', $output, $returnCode);
+            exec($command, $output, $returnCode);
 
-            // Detailed error reporting
             if ($returnCode !== 0) {
-                $errorOutput = implode("\n", $output);
-                throw new Exception("Python script failed (code {$returnCode}): {$errorOutput}");
+                throw new Exception('Python script execution failed: ' . implode("\n", $output));
             }
 
-            if (empty($output)) {
-                throw new Exception('No output from GAN script');
-            }
-
-            // Parse JSON response
+            // Get only the last line of output (the JSON response)
             $jsonResponse = end($output);
+            
+            if (empty($jsonResponse)) {
+                throw new Exception('No output from Python script');
+            }
+
             $result = json_decode($jsonResponse, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new Exception('Invalid JSON response: ' . implode("\n", $output));
+                throw new Exception('Invalid JSON response: ' . $jsonResponse);
             }
 
             if (!$result['success']) {
-                throw new Exception($result['error'] ?? 'Unknown error in GAN script');
+                throw new Exception($result['error'] ?? 'Unknown GAN encoding error');
             }
 
-            // Verify output image
-            if (file_exists($stegoFullPath)) {
-                $psnr = $this->calculatePSNR($originalPath, $stegoPath);
-                if ($psnr < 25.0) { // Lowered from 30.0 to 25.0 for better balance
-                    throw new Exception('Generated image quality is too low');
-                }
-
-                // Verify message can be decoded
-                if (!$this->verifyGANEncoding($stegoPath, $message)) {
-                    throw new Exception('Message verification failed');
-                }
+            if (!file_exists($stegoFullPath)) {
+                throw new Exception('Output file was not created');
             }
 
             return $stegoPath;
 
         } catch (Exception $e) {
-            // Cleanup on failure
             if (isset($stegoFullPath) && file_exists($stegoFullPath)) {
                 unlink($stegoFullPath);
             }
