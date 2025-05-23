@@ -384,4 +384,19 @@ class SteganographyService
         // TODO: Implement SSIM calculation
         return 0.0;
     }
+
+    private function processEncodingResult($jsonResponse, $stegoPath) 
+    {
+        $result = json_decode($jsonResponse, true);
+        
+        if (!$result['success']) {
+            throw new Exception($result['error'] ?? 'Unknown encoding error');
+        }
+
+        return (object) [
+            'stego_image' => $stegoPath,
+            'psnr_value' => $result['psnr'] ?? 0,
+            'ssim_value' => $result['ssim'] ?? 0  // Add SSIM handling
+        ];
+    }
 }

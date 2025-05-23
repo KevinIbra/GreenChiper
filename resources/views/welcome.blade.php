@@ -848,16 +848,81 @@
                                 </a>
                             </div>
                         </div>
-                        ${result.data.psnr_value ? `
+                        ${result.data.psnr_value || result.data.ssim_value ? `
                             <div class="mt-3">
-                                <span class="badge bg-info metrics-badge">PSNR: ${result.data.psnr_value.toFixed(2)}</span>
-                                <span class="badge bg-success metrics-badge">SSIM: ${result.data.ssim_value.toFixed(2)}</span>
+                                <span class="badge bg-info metrics-badge">PSNR: ${Number(result.data.psnr_value).toFixed(2)}</span>
+                                <span class="badge bg-success metrics-badge">SSIM: ${Number(result.data.ssim_value).toFixed(3)}</span>
                             </div>
                         ` : ''}
                     ` : ''}
                 </div>
             `;
         }
+
+        document.getElementById('encodeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = this;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const spinner = submitBtn.querySelector('.loading');
+            const resultDiv = document.getElementById('encodeResult');
+            
+            try {
+                submitBtn.disabled = true;
+                spinner.classList.remove('d-none');
+                resultDiv.innerHTML = '';
+                
+                const formData = new FormData(form);
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success mb-3">
+                            <i class="fas fa-check-circle me-2"></i>${result.message}
+                        </div>
+                        <div class="d-flex flex-column align-items-center">
+                            ${result.data && result.data.stego_image ? `
+                                <div class="text-center mb-3">
+                                    <h6 class="mb-2">Preview:</h6>
+                                    <img src="/storage/${result.data.stego_image}" 
+                                        class="img-thumbnail preview-image mb-3" 
+                                        style="max-width: 300px; cursor: pointer"
+                                        onclick="window.open('/storage/${result.data.stego_image}', '_blank')"
+                                        alt="Encoded image">
+                                    <div class="mt-2">
+                                        <a href="${result.download_url}" class="btn btn-primary btn-lg btn-download" download>
+                                            <i class="fas fa-download me-2"></i>Download Encoded Image
+                                        </a>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            ${result.data && result.data.psnr_value ? `
+                                <div class="mt-3">
+                                    <span class="badge bg-info metrics-badge">PSNR: ${result.data.psnr_value.toFixed(2)}</span>
+                                    <span class="badge bg-success metrics-badge">SSIM: ${result.data.ssim_value.toFixed(2)}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>${error.message}
+                    </div>
+                `;
+            } finally {
+                submitBtn.disabled = false;
+                spinner.classList.add('d-none');
+            }
+        });
 
         // Add animation to method info display
         document.querySelectorAll('select[name="method"]').forEach(select => {

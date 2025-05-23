@@ -12,29 +12,35 @@ def decode_gan(image_path):
 
         # Extract binary message
         binary_message = ''
-        terminator = '1111111100000000'  # 8 ones followed by 8 zeros
-        
+        terminator = '11111111' + '00000000'  # FF00 terminator
+
         for y in range(height):
             for x in range(width):
                 pixel = pixels[y, x]
-                # Get LSB from each channel
+                # Get LSB from each RGB channel
                 for color in pixel:
                     binary_message += str(color & 1)
-                    
+
                 # Check for terminator sequence
                 if len(binary_message) >= len(terminator):
-                    if binary_message[-len(terminator):] == terminator:
-                        # Found terminator, extract actual message
-                        binary_message = binary_message[:-len(terminator)]
-                        # Convert binary to text
+                    term_index = binary_message.find(terminator)
+                    if term_index != -1:
+                        # Extract message before terminator
+                        binary_message = binary_message[:term_index]
+                        
+                        # Convert binary to text (8 bits per character)
                         message = ''
                         for i in range(0, len(binary_message), 8):
                             if i + 8 <= len(binary_message):
                                 byte = binary_message[i:i+8]
-                                message += chr(int(byte, 2))
+                                char = chr(int(byte, 2))
+                                # Only add printable ASCII characters
+                                if 32 <= ord(char) <= 126:
+                                    message += char
+                        
                         return json.dumps({
                             'success': True,
-                            'message': message
+                            'message': message.strip()
                         })
 
         return json.dumps({
